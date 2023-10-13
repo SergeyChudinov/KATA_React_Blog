@@ -5,6 +5,11 @@ import {
   ADD_BLOG_STARTED,
   ADD_BLOG_SUCCESS,
   ADD_BLOG_FAILURE,
+  LOG_IN_STARTED,
+  LOG_IN_SUCCSESS,
+  LOG_IN_FAILURE,
+  LOG_OUT,
+  EDIT,
 } from './types'
 
 export const addBlogsStrarted = () => {
@@ -44,5 +49,38 @@ export const addBlogFailure = (e) => {
   return {
     type: ADD_BLOG_FAILURE,
     payload: e,
+  }
+}
+
+export const logInStrarted = () => {
+  return {
+    type: LOG_IN_STARTED,
+  }
+}
+
+export const logInSuccsess = (user) => {
+  return {
+    type: LOG_IN_SUCCSESS,
+    payload: user,
+  }
+}
+
+export const logInFailure = (e) => {
+  return {
+    type: LOG_IN_FAILURE,
+    payload: e,
+  }
+}
+
+export const logOut = () => {
+  return {
+    type: LOG_OUT,
+  }
+}
+
+export const edit = (user) => {
+  return {
+    type: EDIT,
+    payload: user,
   }
 }

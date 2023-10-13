@@ -35,11 +35,13 @@
 }
 
 .blog__title {
+	height: 28px;
 	color: #1890FF;
 	font-size: 20px;
 	font-weight: 400;
 	line-height: 28px;
 	margin-right: 13px;
+	overflow: hidden;
 }
 
 .blog__heart {
@@ -54,7 +56,9 @@
 }
 
 .blog__tagList {
+	height: 22px;
 	margin-bottom: 7px;
+	overflow: hidden;
 }
 
 .blog__list {
@@ -63,6 +67,7 @@
 }
 
 .blog__list-item {
+	font-size: 12px;
 	color: rgba(0, 0, 0, 0.50);
 	border: 1px solid rgba(0, 0, 0, 0.50);
 	border-radius: 2px;

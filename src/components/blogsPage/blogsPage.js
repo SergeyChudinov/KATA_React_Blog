@@ -1,5 +1,6 @@
+import { useSelector, connect } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 import * as actions from '../../redux/actions'
 import BlogService from '../../services/blog-services'
@@ -12,6 +13,9 @@ import './blogsPage.scss'
 function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, addBlogsFailure }) {
   const [offset, setOffset] = useState(0)
   const [pages, sePages] = useState(null)
+  const token = useSelector((state) => state.user.token)
+  const isLoggedIn = token ? true : false
+
   const blogsService = new BlogService()
 
   useEffect(() => {
@@ -21,7 +25,7 @@ function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, 
   const updateBlogs = () => {
     addBlogsStrarted()
     blogsService
-      .getArticles(offset)
+      .getArticles(offset, token)
       .then((res) => {
         onBlogsLoaded(res.articles)
         sePages(Math.ceil(res.articlesCount / 10))
@@ -48,12 +52,15 @@ function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, 
   const content = spinner || errorMessage || elements
 
   return (
-    <div className="blogs">
-      {content}
-      <div className="pagination">
-        <Pagin nextPage={nextPage} pages={pages} />
+    <>
+      {!isLoggedIn && <Redirect to="/sign-in" />}
+      <div className="blogs">
+        {content}
+        <div className="pagination">
+          <Pagin nextPage={nextPage} pages={pages} />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

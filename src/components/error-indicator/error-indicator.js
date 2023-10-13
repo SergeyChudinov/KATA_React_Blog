@@ -2,7 +2,7 @@ import React from 'react'
 
 import './error-indicator.scss'
 import icon from './wrong.png'
-
+// { message }
 const ErrorIndicator = ({ message }) => {
   return (
     <div className="error-indicator">

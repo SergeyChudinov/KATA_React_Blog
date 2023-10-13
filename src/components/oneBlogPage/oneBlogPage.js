@@ -1,6 +1,6 @@
+import { useSelector, connect } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Redirect } from 'react-router-dom'
 // import { format } from 'date-fns'
 
 // import heart from './heart.svg'
@@ -16,6 +16,9 @@ import './oneBlogPage.scss'
 
 function OneBlogPage({ blog, error, loading, addBlogStrarted, addBlogSuccsess, addBlogFailure }) {
   const { id } = useParams()
+  const token = useSelector((state) => state.user.token)
+  const isLoggedIn = token ? true : false
+
   const blogsService = new BlogService()
 
   useEffect(() => {
@@ -25,7 +28,7 @@ function OneBlogPage({ blog, error, loading, addBlogStrarted, addBlogSuccsess, a
   const updateBlog = () => {
     addBlogStrarted()
     blogsService
-      .getSlug(id)
+      .getArticle(id, token)
       .then((res) => {
         onBlogLoaded(res)
       })
@@ -42,7 +45,12 @@ function OneBlogPage({ blog, error, loading, addBlogStrarted, addBlogSuccsess, a
   const spinner = loading ? <Spinner /> : null
   const content = spinner || errorMessage || <BlogPage data={blog} dataType="max" />
 
-  return <section className="oneBlog">{content}</section>
+  return (
+    <>
+      {!isLoggedIn && <Redirect to="/sign-in" />}
+      <section className="oneBlog">{content}</section>
+    </>
+  )
 }
 
 const mapStateToProps = (state) => {
