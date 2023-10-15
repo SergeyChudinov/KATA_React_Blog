@@ -6,13 +6,15 @@ export default class BlogService {
     },
   }
 
-  url = 'https://blog.kata.academy/api/'
+  url = 'https://blog.kata.academy/api'
   limit = 10
 
   async getResource(url) {
     const res = await fetch(url, this.options)
     // console.log(this.options)
-    if (!res.ok) {
+    if (res.status === 422) {
+      throw new Error('Неправильный пароль')
+    } else if (!res.ok) {
       throw new Error(`Could not fetch ${url} , status: ${res.status}`)
     }
     return await res.json()
@@ -35,7 +37,7 @@ export default class BlogService {
   async signUp(data) {
     this.options.body = data
     this.options.method = 'POST'
-    const res = await this.getResource(`${this.url}users`)
+    const res = await this.getResource(`${this.url}/users`)
     // console.log(res)
     return res
   }
@@ -43,7 +45,7 @@ export default class BlogService {
   async signIn(data) {
     this.options.body = data
     this.options.method = 'POST'
-    const res = await this.getResource(`${this.url}users/login`)
+    const res = await this.getResource(`${this.url}/users/login`)
     // console.log(res)
     return res.user
   }
@@ -52,8 +54,17 @@ export default class BlogService {
     this.options.body = data
     this.options.method = 'PUT'
     this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}user`)
+    const res = await this.getResource(`${this.url}/user`)
     // console.log(res)
     return res.user
+  }
+
+  async createArticle(data, token) {
+    this.options.body = data
+    this.options.method = 'POST'
+    this.options.headers.Authorization = `Bearer ${token}`
+    const res = await this.getResource(`${this.url}/articles`)
+    // console.log(res)
+    return res
   }
 }

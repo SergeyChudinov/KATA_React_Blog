@@ -7,6 +7,7 @@ export const ADD_BLOG_FAILURE = 'ADD_BLOG_FAILURE'
 export const LOG_IN_STARTED = 'LOG_IN_STARTED'
 export const LOG_IN_SUCCSESS = 'LOG_IN_SUCCSESS'
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE'
+export const DATA_IS_NOT_CORRECT = 'DATA_IS_NOT_CORRECT'
 export const LOG_OUT = 'LOG_OUT'
 export const EDIT = 'EDIT'
 

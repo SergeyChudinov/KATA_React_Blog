@@ -4,18 +4,18 @@ import { Redirect } from 'react-router-dom'
 
 import * as actions from '../../redux/actions'
 import BlogService from '../../services/blog-services'
-import BlogPage from '../blogPage/blogPage'
+import BlogListItem from '../blogListItem'
 import ErrorIndicator from '../error-indicator/error-indicator'
 import Spinner from '../spinner/spinner'
 import Pagin from '../pagination/pagination'
-import './blogsPage.scss'
+import './blogList.scss'
 
-function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, addBlogsFailure }) {
+function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, addBlogsFailure }) {
   const [offset, setOffset] = useState(0)
   const [pages, sePages] = useState(null)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
-
+  // console.log(token)
   const blogsService = new BlogService()
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, 
   }, [offset])
 
   const updateBlogs = () => {
-    addBlogsStrarted()
+    addBlogsStarted()
     blogsService
       .getArticles(offset, token)
       .then((res) => {
@@ -44,7 +44,7 @@ function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, 
   // console.log('blogs', blogs)
 
   const elements = blogs.map((blog) => {
-    return <BlogPage key={blog.slug} data={blog} dataType="min" />
+    return <BlogListItem key={blog.slug} data={blog} />
   })
 
   const errorMessage = error ? <ErrorIndicator message={error} /> : null
@@ -54,7 +54,7 @@ function BlogsPage({ blogs, error, loading, addBlogsStrarted, addBlogsSuccsess, 
   return (
     <>
       {!isLoggedIn && <Redirect to="/sign-in" />}
-      <div className="blogs">
+      <div className="blogList">
         {content}
         <div className="pagination">
           <Pagin nextPage={nextPage} pages={pages} />
@@ -72,4 +72,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, actions)(BlogsPage)
+export default connect(mapStateToProps, actions)(BlogList)

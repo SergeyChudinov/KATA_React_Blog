@@ -2,13 +2,15 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 
+// import Main from '../main'
 import ErrorBoundary from '../error-boundry'
 import Header from '../header'
-import BlogsPage from '../blogsPage'
-import OneBlogPage from '../oneBlogPage'
+import BlogList from '../blogList'
+import Blog from '../blog'
 import SignUpPages from '../pages/signUpPages'
 import SignInPages from '../pages/signInPages'
 import ProfilePages from '../pages/prifilePages'
+import CreateArticle from '../pages/createArticle'
 import { logInSuccsess } from '../../redux/actions'
 
 import './app.scss'
@@ -35,14 +37,23 @@ function App() {
     <Router>
       <ErrorBoundary>
         <div className="app">
+          {/* <Main /> */}
           <Header />
           <Switch>
             <Route exact path="/">
-              <BlogsPage />
+              <BlogList />
             </Route>
-            <Route exact path="/blog/:id">
-              <OneBlogPage />
-            </Route>
+            {/* <Route exact path="/blog/:id">
+              <Blog />
+            </Route> */}
+            <Route
+              exact
+              path="/blog/:id"
+              render={({ match }) => {
+                const { id } = match.params
+                return <Blog itemId={id} />
+              }}
+            />
             <Route exact path="/sign-up">
               <SignUpPages />
             </Route>
@@ -51,6 +62,9 @@ function App() {
             </Route>
             <Route exact path="/profile">
               <ProfilePages />
+            </Route>
+            <Route exact path="/new-article">
+              <CreateArticle />
             </Route>
           </Switch>
         </div>

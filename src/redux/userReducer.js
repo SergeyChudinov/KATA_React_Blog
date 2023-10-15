@@ -1,4 +1,4 @@
-import { LOG_IN_STARTED, LOG_IN_SUCCSESS, LOG_IN_FAILURE, LOG_OUT, EDIT } from './types'
+import { LOG_IN_STARTED, LOG_IN_SUCCSESS, LOG_IN_FAILURE, DATA_IS_NOT_CORRECT, LOG_OUT, EDIT } from './types'
 
 const initialBlogsState = {
   userName: null,
@@ -30,6 +30,11 @@ export const userReducer = (state = initialBlogsState, action) => {
         loading: false,
         error: action.payload,
       }
+    case DATA_IS_NOT_CORRECT:
+      return {
+        ...state,
+        loading: false,
+      }
     case LOG_OUT:
       return {
         userName: null,
@@ -41,6 +46,7 @@ export const userReducer = (state = initialBlogsState, action) => {
       }
     case EDIT:
       return {
+        ...state,
         userName: action.payload.username,
         email: action.payload.email,
         token: action.payload.token,

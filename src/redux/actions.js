@@ -8,11 +8,12 @@ import {
   LOG_IN_STARTED,
   LOG_IN_SUCCSESS,
   LOG_IN_FAILURE,
+  DATA_IS_NOT_CORRECT,
   LOG_OUT,
   EDIT,
 } from './types'
 
-export const addBlogsStrarted = () => {
+export const addBlogsStarted = () => {
   return {
     type: ADD_BLOGS_STARTED,
   }
@@ -32,7 +33,7 @@ export const addBlogsFailure = (e) => {
   }
 }
 
-export const addBlogStrarted = () => {
+export const addBlogStarted = () => {
   return {
     type: ADD_BLOG_STARTED,
   }
@@ -69,6 +70,12 @@ export const logInFailure = (e) => {
   return {
     type: LOG_IN_FAILURE,
     payload: e,
+  }
+}
+
+export const dataIsNotCrrect = () => {
+  return {
+    type: DATA_IS_NOT_CORRECT,
   }
 }
 

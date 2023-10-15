@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import { useState } from 'react'
 
 import BlogService from '../../../services/blog-services'
@@ -11,7 +11,7 @@ const SignUpPages = () => {
   const [signUp, setSignUp] = useState(false)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
-  console.log(isLoggedIn)
+  // console.log(isLoggedIn)
 
   const {
     register,
@@ -147,7 +147,8 @@ const SignUpPages = () => {
         <button type="submit">Create</button>
 
         <p>
-          Already have an account?<span> Sign In.</span>
+          Already have an account?
+          <Link to="/sign-in"> Sign In</Link>
         </p>
       </form>
     </>

@@ -30,7 +30,9 @@ function Header() {
           Realworld Blog
         </Link>
         <div>
-          <button className="btn createBtn">Create article</button>
+          <Link className="btn createBtn" to="/new-article">
+            Create article
+          </Link>
           <Link className="btn profileBtn" to="/profile">
             <div className="profileBtn__container">
               <p className="profileBtn__name">{user.userName}</p>

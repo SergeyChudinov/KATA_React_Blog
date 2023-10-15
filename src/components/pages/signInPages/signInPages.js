@@ -1,15 +1,17 @@
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 
 import BlogService from '../../../services/blog-services'
-import { logInStrarted, logInSuccsess, logInFailure } from '../../../redux/actions'
+import { logInStrarted, logInSuccsess, logInFailure, dataIsNotCrrect } from '../../../redux/actions'
 import ErrorIndicator from '../../error-indicator/error-indicator'
 import Spinner from '../../spinner/spinner'
 
 import './signInPages.scss'
 
 const SignInPages = () => {
+  const [incorrectLogin, setIncorrectLogin] = useState(false)
   const { token, error, loading } = useSelector((state) => state.user)
   const isLoggedIn = token ? true : false
 
@@ -41,9 +43,25 @@ const SignInPages = () => {
         localStorage.setItem('username', user.username)
         localStorage.setItem('email', user.email)
         localStorage.setItem('token', user.token)
+        localStorage.setItem('image', user.image)
       })
-      .catch((e) => dispatch(logInFailure(e)))
+      .catch((e) => {
+        if (e.message.includes('Неправильный пароль')) {
+          setIncorrectLogin(true)
+          dispatch(dataIsNotCrrect())
+        } else {
+          dispatch(logInFailure(e))
+        }
+      })
   }
+
+  // console.log(incorrectLogin)
+  const incorrectLoginMessage = incorrectLogin ? (
+    <div>
+      <span>Неправильный логин или пароль</span>
+    </div>
+  ) : null
+
   // console.log(user)
   const email = register('email', {
     required: true,
@@ -93,16 +111,17 @@ const SignInPages = () => {
           <span>Пароль должен содержать от 6 до 40 символов</span>
         </div>
       )}
+      {incorrectLoginMessage}
 
       <button type="submit">Login</button>
 
       <p>
-        Already have an account?<span> Sign Up.</span>
+        Already have an account?
+        <Link to="/sign-up"> Sign Up</Link>
       </p>
     </form>
   )
 
-  // console.log(error)
   const errorMessage = error ? <ErrorIndicator message={error.message} /> : null
   const spinner = loading ? <Spinner /> : null
   const content = spinner || errorMessage || elements
