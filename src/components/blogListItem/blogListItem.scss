@@ -3,6 +3,7 @@
 }
 
 .blogListItem {
+	position: relative;
 	width: 941px;
 	display: flex;
 	justify-content: space-between;
@@ -14,7 +15,7 @@
 	cursor: pointer;
 }
 
-.blog:hover {
+.blogListItem:hover {
 	box-shadow: 5px 5px 5px 0px rgba(34, 60, 80, 0.2);
 }
 
@@ -78,6 +79,9 @@
 }
 
 .blogListItem__author {
+	position: absolute;
+	top: 17px;
+	right: 14px;
 	display: flex;
 }
 

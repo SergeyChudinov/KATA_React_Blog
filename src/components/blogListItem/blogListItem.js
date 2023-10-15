@@ -32,7 +32,7 @@ function BlogListItem({
       <section className="blogListItem">
         <div className="blogListItem__container">
           <div className="blogListItem__block">
-            <h2 className="blogListItem__title">S{title}</h2>
+            <h2 className="blogListItem__title">{title}</h2>
             <img className="blogListItem__heart" src={heart} alt="heart" />
             <span className="blogListItem__favorited">{favoritesCount}</span>
           </div>

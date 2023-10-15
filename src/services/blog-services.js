@@ -10,14 +10,29 @@ export default class BlogService {
   limit = 10
 
   async getResource(url) {
-    const res = await fetch(url, this.options)
-    // console.log(this.options)
-    if (res.status === 422) {
-      throw new Error('Неправильный пароль')
-    } else if (!res.ok) {
-      throw new Error(`Could not fetch ${url} , status: ${res.status}`)
+    try {
+      const res = await fetch(url, this.options)
+      // console.log(res)
+      if (res.status === 422) {
+        throw new Error('Неправильный пароль')
+      } else if (!res.ok) {
+        throw new Error(`Could not fetch ${url} , status: ${res.status}`)
+      }
+      // console.log(res)
+      if (res.status !== 204) {
+        return res.json()
+      } else {
+        return
+      }
+    } catch (e) {
+      if (e.message.includes('отсутствует подключение к сети')) {
+        console.log('Ошибка отсутствия сети')
+      } else {
+        // console.log(url, this.options.method)
+        // console.log(e)
+        throw e
+      }
     }
-    return await res.json()
   }
 
   async getArticles(offset, token) {
@@ -66,5 +81,25 @@ export default class BlogService {
     const res = await this.getResource(`${this.url}/articles`)
     // console.log(res)
     return res
+  }
+
+  async updateArticle(data, token, slug) {
+    console.log(slug, token)
+    this.options.body = data
+    this.options.method = 'PUT'
+    this.options.headers.Authorization = `Bearer ${token}`
+    const res = await this.getResource(`${this.url}/articles/${slug}`)
+    // console.log(res)
+    return res
+  }
+
+  async deleteArticle(token, slug) {
+    // console.log(slug, token)
+    // this.options.body = data
+    this.options.method = 'DELETE'
+    this.options.headers.Authorization = `Bearer ${token}`
+    const res = await this.getResource(`${this.url}/articles/${slug}`)
+    // console.log(res)
+    // return res
   }
 }

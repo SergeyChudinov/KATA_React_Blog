@@ -1,29 +1,19 @@
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 
 import BlogService from '../../../services/blog-services'
+import Article from '../article/article'
 
 import './createArticle.scss'
 
-const CreateArticle = () => {
+const CreateArticle = ({ dataType }) => {
   const [tags, setTags] = useState([])
-  const user = useSelector((state) => state.user)
-  const isLoggedIn = user.token ? true : false
-  // console.log(user)
-  // const dispatch = useDispatch()
+  const { id } = useParams()
+  const token = localStorage.getItem('token')
+  const isLoggedIn = token ? true : false
 
-  // console.log(new Date())
-  // console.log(new Date().toISOString())
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm()
-
-  const onSubmit = (data) => {
+  const onSubmitCreate = (data) => {
     const blogService = new BlogService()
 
     const article = {
@@ -36,7 +26,24 @@ const CreateArticle = () => {
     }
 
     const json = JSON.stringify(article)
-    blogService.createArticle(json, user.token)
+    blogService.createArticle(json, token).then((res) => console.log(res))
+  }
+
+  const onSubmitEdit = (data) => {
+    const blogService = new BlogService()
+
+    const article = {
+      article: {
+        body: data.body,
+        description: data.description,
+        tagList: tags.filter((tag) => tag.replace(/\s/g, '') !== ''),
+        title: data.title,
+      },
+    }
+
+    const json = JSON.stringify(article)
+    console.log(json)
+    blogService.updateArticle(json, token, id).then((res) => console.log(res))
   }
 
   const handleAddTag = (e) => {
@@ -56,89 +63,41 @@ const CreateArticle = () => {
     newTags[index] = value
     setTags(newTags)
   }
+  // console.log(isLoggedIn)
 
-  return (
-    <div className="article">
-      {!isLoggedIn && <Redirect to="/sign-in" />}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="article__title">Create new article</h1>
-
-        <label className="article__label" htmlFor="title">
-          Title
-        </label>
-        <input
-          className="article__input"
-          type="text"
-          id="title"
-          placeholder="Title"
-          {...register('title', { required: true })}
+  if (dataType === 'new-article') {
+    return (
+      <>
+        {!isLoggedIn && <Redirect to="/sign-in" />}
+        <Article
+          title="Create new article"
+          isLoggedIn={isLoggedIn}
+          onSubmit={onSubmitCreate}
+          tags={tags}
+          handleAddTag={handleAddTag}
+          handleDeleteTag={handleDeleteTag}
+          handleTagChange={handleTagChange}
         />
-        {errors.title && (
-          <div>
-            <span className="article__span">Поле Title обязательно для заполнения</span>
-          </div>
-        )}
-
-        <label className="article__label" htmlFor="description">
-          Short description
-        </label>
-        <input
-          className="article__input"
-          type="text"
-          id="description"
-          placeholder="Short description"
-          {...register('description', { required: true })}
+      </>
+    )
+  } else {
+    console.log(id)
+    return (
+      <>
+        {!isLoggedIn && <Redirect to="/sign-in" />}
+        <Article
+          title="Edit article"
+          isLoggedIn={isLoggedIn}
+          onSubmit={onSubmitEdit}
+          tags={tags}
+          handleAddTag={handleAddTag}
+          handleDeleteTag={handleDeleteTag}
+          handleTagChange={handleTagChange}
+          id={id}
         />
-        {errors.title && (
-          <div>
-            <span className="article__span">Поле Description обязательно для заполнения</span>
-          </div>
-        )}
-
-        <label className="article__label" htmlFor="description">
-          Text
-        </label>
-        <textarea
-          className="article__textarea"
-          type="text"
-          id="description"
-          placeholder="Text"
-          {...register('body', { required: true })}
-        />
-        {errors.title && (
-          <div>
-            <span className="article__span">Поле Text обязательно для заполнения</span>
-          </div>
-        )}
-
-        <div>
-          {tags.length > 0 && <label className="article__label">Tags</label>}
-          {tags.map((tag, i) => (
-            <div key={i} className="article__container">
-              <input
-                className="article__tag"
-                type="text"
-                placeholder="Tag"
-                value={tag}
-                onChange={(e) => handleTagChange(i, e.target.value)}
-              />
-              <button className="article__btn btn__delete" onClick={(e) => handleDeleteTag(e, i)}>
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <button className="article__btn btn__addTag" onClick={handleAddTag}>
-          Add tag
-        </button>
-
-        <button className="article__btn btn__submit" type="submit">
-          Отправить
-        </button>
-      </form>
-    </div>
-  )
+      </>
+    )
+  }
 }
 
 export default CreateArticle

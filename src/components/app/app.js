@@ -43,17 +43,18 @@ function App() {
             <Route exact path="/">
               <BlogList />
             </Route>
-            {/* <Route exact path="/blog/:id">
+            <Route exact path="/blog/:id">
               <Blog />
-            </Route> */}
-            <Route
+            </Route>
+            {/* <Route
               exact
-              path="/blog/:id"
+              path="/blog/:slug"
               render={({ match }) => {
-                const { id } = match.params
-                return <Blog itemId={id} />
+                console.log(match)
+                const { slug } = match.params
+                return <Blog itemId={slug} />
               }}
-            />
+            /> */}
             <Route exact path="/sign-up">
               <SignUpPages />
             </Route>
@@ -64,7 +65,10 @@ function App() {
               <ProfilePages />
             </Route>
             <Route exact path="/new-article">
-              <CreateArticle />
+              <CreateArticle dataType="new-article" />
+            </Route>
+            <Route exact path="/edit-article/:id">
+              <CreateArticle dataType="edit-article" />
             </Route>
           </Switch>
         </div>

@@ -5,6 +5,9 @@ import {
   ADD_BLOG_STARTED,
   ADD_BLOG_SUCCESS,
   ADD_BLOG_FAILURE,
+  DELETE_BLOG_STARTED,
+  DELETE_BLOG_SUCCESS,
+  DELETE_BLOG_FAILURE,
   LOG_IN_STARTED,
   LOG_IN_SUCCSESS,
   LOG_IN_FAILURE,
@@ -49,6 +52,25 @@ export const addBlogSuccsess = (blog) => {
 export const addBlogFailure = (e) => {
   return {
     type: ADD_BLOG_FAILURE,
+    payload: e,
+  }
+}
+
+export const deleteBlogStarted = () => {
+  return {
+    type: DELETE_BLOG_STARTED,
+  }
+}
+
+export const deleteBlogSuccsess = () => {
+  return {
+    type: DELETE_BLOG_SUCCESS,
+  }
+}
+
+export const deleteBlogFailure = (e) => {
+  return {
+    type: DELETE_BLOG_FAILURE,
     payload: e,
   }
 }

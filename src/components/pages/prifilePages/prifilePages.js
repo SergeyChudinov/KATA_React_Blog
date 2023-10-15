@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Redirect } from 'react-router-dom'
@@ -8,6 +9,7 @@ import { edit } from '../../../redux/actions'
 import './prifilePages.scss'
 
 const ProfilePages = () => {
+  const [chengedProfile, setChengedProfile] = useState(false)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
 
@@ -38,6 +40,7 @@ const ProfilePages = () => {
       localStorage.setItem('email', user.email)
       localStorage.setItem('token', user.token)
       localStorage.setItem('image', user.image)
+      setChengedProfile(true)
     })
   }
 
@@ -66,6 +69,7 @@ const ProfilePages = () => {
   return (
     <>
       {!isLoggedIn && <Redirect to="/sign-in" />}
+      {chengedProfile && <Redirect to="/" />}
       <form className="profile" onSubmit={handleSubmit(onSubmit)}>
         <h1>Edit Profile</h1>
 
