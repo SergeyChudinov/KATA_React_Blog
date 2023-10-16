@@ -23,7 +23,6 @@ function App() {
     if (token) {
       const user = {
         username: localStorage.getItem('username'),
-        email: localStorage.getItem('email'),
         token: localStorage.getItem('token'),
         image: localStorage.getItem('image'),
       }

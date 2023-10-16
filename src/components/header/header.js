@@ -18,7 +18,6 @@ function Header() {
     localStorage.clear()
   }
 
-  // foo.bar = 0
   if (isLoggedIn) {
     const img = user.image ? user.image : avatar
 

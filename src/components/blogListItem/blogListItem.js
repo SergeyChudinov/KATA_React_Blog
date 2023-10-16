@@ -28,7 +28,6 @@ function BlogListItem({
   })
 
   const img = favorited ? heartRed : heart
-
   const formattedDate = format(new Date(updatedAt), 'MMMM d, yyyy')
 
   return (

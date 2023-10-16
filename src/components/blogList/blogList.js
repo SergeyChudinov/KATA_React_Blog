@@ -1,8 +1,8 @@
-import { useSelector, connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import * as actions from '../../redux/actions'
+import { addBlogsStarted, addBlogsSuccsess, addBlogsFailure } from '../../redux/actions'
 import BlogService from '../../services/blog-services'
 import BlogListItem from '../blogListItem'
 import ErrorIndicator from '../error-indicator/error-indicator'
@@ -10,12 +10,14 @@ import Spinner from '../spinner/spinner'
 import Pagin from '../pagination/pagination'
 import './blogList.scss'
 
-function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, addBlogsFailure }) {
+function BlogList() {
   const [offset, setOffset] = useState(0)
   const [pages, sePages] = useState(null)
+  const { blogs, error, loading } = useSelector((state) => state.blogs)
   const token = useSelector((state) => state.user.token)
-  const isLoggedIn = token ? true : false
+  const dispatch = useDispatch()
 
+  const isLoggedIn = token ? true : false
   const blogsService = new BlogService()
 
   useEffect(() => {
@@ -23,18 +25,18 @@ function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, ad
   }, [offset])
 
   const updateBlogs = () => {
-    addBlogsStarted()
+    dispatch(addBlogsStarted())
     blogsService
       .getArticles(offset, token)
       .then((res) => {
         onBlogsLoaded(res.articles)
         sePages(Math.ceil(res.articlesCount / 10))
       })
-      .catch((e) => addBlogsFailure(e))
+      .catch((e) => dispatch(addBlogsFailure(e)))
   }
 
   const onBlogsLoaded = (blogs) => {
-    addBlogsSuccsess(blogs)
+    dispatch(addBlogsSuccsess(blogs))
   }
 
   const nextPage = (page) => {
@@ -62,12 +64,4 @@ function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, ad
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    blogs: state.blogs.blogs,
-    error: state.blogs.error,
-    loading: state.blogs.loading,
-  }
-}
-
-export default connect(mapStateToProps, actions)(BlogList)
+export default BlogList

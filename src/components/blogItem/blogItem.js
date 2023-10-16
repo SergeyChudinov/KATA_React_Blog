@@ -1,11 +1,7 @@
 import ReactMarkdown from 'react-markdown'
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
-import { Button, message, Popconfirm } from 'antd'
-
-import BlogService from '../../services/blog-services'
 
 import heart from './heart.svg'
 import heartRed from './heart-red.svg'

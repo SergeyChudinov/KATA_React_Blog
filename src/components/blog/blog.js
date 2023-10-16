@@ -1,4 +1,4 @@
-import { useSelector, connect, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useParams, Redirect } from 'react-router-dom'
 

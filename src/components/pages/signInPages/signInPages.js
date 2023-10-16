@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Redirect, Link } from 'react-router-dom'
 
-import BlogService from '../../../services/blog-services'
 import { logInStrarted, logInSuccsess, logInFailure, dataIsNotCrrect } from '../../../redux/actions'
+import BlogService from '../../../services/blog-services'
 import ErrorIndicator from '../../error-indicator/error-indicator'
 import Spinner from '../../spinner/spinner'
 
@@ -34,12 +34,12 @@ const SignInPages = () => {
     }
     const json = JSON.stringify(user)
     dispatch(logInStrarted())
+
     blogService
       .signIn(json)
       .then((user) => {
         dispatch(logInSuccsess(user))
         localStorage.setItem('username', user.username)
-        localStorage.setItem('email', user.email)
         localStorage.setItem('token', user.token)
         localStorage.setItem('image', user.image)
       })

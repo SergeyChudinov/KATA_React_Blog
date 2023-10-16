@@ -2,7 +2,6 @@ import { LOG_IN_STARTED, LOG_IN_SUCCSESS, LOG_IN_FAILURE, DATA_IS_NOT_CORRECT, L
 
 const initialBlogsState = {
   userName: null,
-  email: null,
   token: null,
   image: null,
   error: null,
@@ -20,7 +19,6 @@ export const userReducer = (state = initialBlogsState, action) => {
       return {
         ...state,
         userName: action.payload.username,
-        email: action.payload.email,
         token: action.payload.token,
         image: action.payload.image,
       }
@@ -38,7 +36,6 @@ export const userReducer = (state = initialBlogsState, action) => {
     case LOG_OUT:
       return {
         userName: null,
-        email: null,
         token: null,
         image: null,
         error: null,
@@ -48,7 +45,6 @@ export const userReducer = (state = initialBlogsState, action) => {
       return {
         ...state,
         userName: action.payload.username,
-        email: action.payload.email,
         token: action.payload.token,
         image: action.payload.image,
       }

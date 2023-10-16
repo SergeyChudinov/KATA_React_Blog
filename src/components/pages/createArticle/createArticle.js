@@ -14,9 +14,9 @@ const CreateArticle = ({ dataType }) => {
   const token = localStorage.getItem('token')
   const isLoggedIn = token ? true : false
 
-  const onSubmitCreate = (data) => {
-    const blogService = new BlogService()
+  const blogService = new BlogService()
 
+  const onSubmitCreate = (data) => {
     const article = {
       article: {
         body: data.body,
@@ -36,8 +36,6 @@ const CreateArticle = ({ dataType }) => {
   }
 
   const onSubmitEdit = (data) => {
-    const blogService = new BlogService()
-
     const article = {
       article: {
         body: data.body,
@@ -75,15 +73,10 @@ const CreateArticle = ({ dataType }) => {
     setTags(newTags)
   }
 
-  // if (createArticle) {
-  //   console.log('Redirect')
-  //   setCreateArticle(false)
-  //   return <Redirect to="/" />
-  // }
-
   if (dataType === 'new-article') {
     return (
       <>
+        {createArticle && <Redirect to="/" />}
         {!isLoggedIn && <Redirect to="/sign-in" />}
         <Article
           title="Create new article"
@@ -99,6 +92,7 @@ const CreateArticle = ({ dataType }) => {
   } else {
     return (
       <>
+        {createArticle && <Redirect to="/" />}
         {!isLoggedIn && <Redirect to="/sign-in" />}
         <Article
           title="Edit article"

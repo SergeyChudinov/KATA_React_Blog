@@ -84,19 +84,18 @@ export default class BlogService {
   async deleteArticle(token, slug) {
     this.options.method = 'DELETE'
     this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/${slug}`)
+    return this.getResource(`${this.url}/articles/${slug}`)
   }
 
   async favoriteAnArticle(token, slug) {
     this.options.method = 'POST'
     this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/${slug}/favorite`)
-    return res
+    return this.getResource(`${this.url}/articles/${slug}/favorite`)
   }
 
   async unfavoriteAnArticle(token, slug) {
     this.options.method = 'DELETE'
     this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/${slug}/favorite`)
+    return this.getResource(`${this.url}/articles/${slug}/favorite`)
   }
 }

@@ -36,7 +36,6 @@ const ProfilePages = () => {
     blogService.edit(json, token).then((user) => {
       dispatch(edit(user))
       localStorage.setItem('username', user.username)
-      localStorage.setItem('email', user.email)
       localStorage.setItem('token', user.token)
       localStorage.setItem('image', user.image)
       setChengedProfile(true)
