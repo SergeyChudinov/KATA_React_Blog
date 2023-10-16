@@ -11,7 +11,6 @@ const SignUpPages = () => {
   const [signUp, setSignUp] = useState(false)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
-  // console.log(isLoggedIn)
 
   const {
     register,

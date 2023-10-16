@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 
 import heart from './heart.svg'
+import heartRed from './heart-red.svg'
 
 import './blogListItem.scss'
 
@@ -13,6 +14,7 @@ function BlogListItem({
     tagList,
     body,
     updatedAt,
+    favorited,
     slug,
     author: { username, image },
   },
@@ -25,6 +27,8 @@ function BlogListItem({
     )
   })
 
+  const img = favorited ? heartRed : heart
+
   const formattedDate = format(new Date(updatedAt), 'MMMM d, yyyy')
 
   return (
@@ -33,7 +37,7 @@ function BlogListItem({
         <div className="blogListItem__container">
           <div className="blogListItem__block">
             <h2 className="blogListItem__title">{title}</h2>
-            <img className="blogListItem__heart" src={heart} alt="heart" />
+            <img className="blogListItem__heart" src={img} alt="heart" />
             <span className="blogListItem__favorited">{favoritesCount}</span>
           </div>
           <div className="blogListItem__tagList">

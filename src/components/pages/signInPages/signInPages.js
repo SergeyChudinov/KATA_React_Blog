@@ -16,7 +16,6 @@ const SignInPages = () => {
   const isLoggedIn = token ? true : false
 
   const dispatch = useDispatch()
-  // console.log(user)
 
   const {
     register,
@@ -38,7 +37,6 @@ const SignInPages = () => {
     blogService
       .signIn(json)
       .then((user) => {
-        // console.log(user)
         dispatch(logInSuccsess(user))
         localStorage.setItem('username', user.username)
         localStorage.setItem('email', user.email)
@@ -55,14 +53,12 @@ const SignInPages = () => {
       })
   }
 
-  // console.log(incorrectLogin)
   const incorrectLoginMessage = incorrectLogin ? (
     <div>
       <span>Неправильный логин или пароль</span>
     </div>
   ) : null
 
-  // console.log(user)
   const email = register('email', {
     required: true,
     pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 
-// import Main from '../main'
 import ErrorBoundary from '../error-boundry'
 import Header from '../header'
 import BlogList from '../blogList'
@@ -20,7 +19,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    // console.log(token)
+
     if (token) {
       const user = {
         username: localStorage.getItem('username'),
@@ -28,7 +27,6 @@ function App() {
         token: localStorage.getItem('token'),
         image: localStorage.getItem('image'),
       }
-      // console.log(user)
       dispatch(logInSuccsess(user))
     }
   })
@@ -37,7 +35,6 @@ function App() {
     <Router>
       <ErrorBoundary>
         <div className="app">
-          {/* <Main /> */}
           <Header />
           <Switch>
             <Route exact path="/">
@@ -46,15 +43,6 @@ function App() {
             <Route exact path="/blog/:id">
               <Blog />
             </Route>
-            {/* <Route
-              exact
-              path="/blog/:slug"
-              render={({ match }) => {
-                console.log(match)
-                const { slug } = match.params
-                return <Blog itemId={slug} />
-              }}
-            /> */}
             <Route exact path="/sign-up">
               <SignUpPages />
             </Route>

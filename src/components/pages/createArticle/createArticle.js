@@ -9,6 +9,7 @@ import './createArticle.scss'
 
 const CreateArticle = ({ dataType }) => {
   const [tags, setTags] = useState([])
+  const [createArticle, setCreateArticle] = useState(false)
   const { id } = useParams()
   const token = localStorage.getItem('token')
   const isLoggedIn = token ? true : false
@@ -26,7 +27,12 @@ const CreateArticle = ({ dataType }) => {
     }
 
     const json = JSON.stringify(article)
-    blogService.createArticle(json, token).then((res) => console.log(res))
+    blogService
+      .createArticle(json, token)
+      .then(() => {
+        setCreateArticle(true)
+      })
+      .catch((err) => console.log(err))
   }
 
   const onSubmitEdit = (data) => {
@@ -42,8 +48,13 @@ const CreateArticle = ({ dataType }) => {
     }
 
     const json = JSON.stringify(article)
-    console.log(json)
-    blogService.updateArticle(json, token, id).then((res) => console.log(res))
+
+    blogService
+      .updateArticle(json, token, id)
+      .then(() => {
+        setCreateArticle(true)
+      })
+      .catch((err) => console.log(err))
   }
 
   const handleAddTag = (e) => {
@@ -63,7 +74,12 @@ const CreateArticle = ({ dataType }) => {
     newTags[index] = value
     setTags(newTags)
   }
-  // console.log(isLoggedIn)
+
+  // if (createArticle) {
+  //   console.log('Redirect')
+  //   setCreateArticle(false)
+  //   return <Redirect to="/" />
+  // }
 
   if (dataType === 'new-article') {
     return (
@@ -81,7 +97,6 @@ const CreateArticle = ({ dataType }) => {
       </>
     )
   } else {
-    console.log(id)
     return (
       <>
         {!isLoggedIn && <Redirect to="/sign-in" />}

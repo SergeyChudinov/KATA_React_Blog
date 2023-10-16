@@ -15,7 +15,7 @@ function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, ad
   const [pages, sePages] = useState(null)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
-  // console.log(token)
+
   const blogsService = new BlogService()
 
   useEffect(() => {
@@ -40,8 +40,6 @@ function BlogList({ blogs, error, loading, addBlogsStarted, addBlogsSuccsess, ad
   const nextPage = (page) => {
     setOffset((page - 1) * 10)
   }
-
-  // console.log('blogs', blogs)
 
   const elements = blogs.map((blog) => {
     return <BlogListItem key={blog.slug} data={blog} />

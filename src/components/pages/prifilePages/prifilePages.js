@@ -34,7 +34,6 @@ const ProfilePages = () => {
     }
     const json = JSON.stringify(user)
     blogService.edit(json, token).then((user) => {
-      // console.log(user)
       dispatch(edit(user))
       localStorage.setItem('username', user.username)
       localStorage.setItem('email', user.email)

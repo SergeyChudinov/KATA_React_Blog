@@ -20,8 +20,6 @@ function Header() {
 
   // foo.bar = 0
   if (isLoggedIn) {
-    // console.log(user)
-
     const img = user.image ? user.image : avatar
 
     return (

@@ -19,21 +19,24 @@ import './blog.scss'
 
 function Blog() {
   const [blogIsDelete, setBlogIsDelete] = useState(false)
+  const [favorited, setFavorited] = useState(null)
   const { blog, error, loading } = useSelector((state) => state.blog)
   const { userName } = useSelector((state) => state.user)
   const { id } = useParams()
   const dispatch = useDispatch()
 
   const token = localStorage.getItem('token')
-
   const isLoggedIn = token ? true : false
-
   const blogsService = new BlogService()
 
   useEffect(() => {
     if (id) getBlog()
     setBlogIsDelete(false)
   }, [])
+
+  useEffect(() => {
+    setFavorited(blog.favorited)
+  }, [blog])
 
   const getBlog = () => {
     dispatch(addBlogStarted())
@@ -63,27 +66,41 @@ function Blog() {
       .then(() => {
         setBlogIsDelete(true)
         dispatch(deleteBlogSuccsess())
-        // console.log(res)
-        // console.log('good')
-        // console.log(blogIsDelete)
       })
       .catch((e) => {
-        // console.log(e)
-        // console.log(blogIsDelete)
         dispatch(deleteBlogFailure(e.message))
       })
+  }
+
+  const handleToggleFavorite = () => {
+    if (!favorited) {
+      blogsService.favoriteAnArticle(token, blog.slug).then(() => {
+        setFavorited(true)
+      })
+    } else {
+      blogsService.unfavoriteAnArticle(token, blog.slug)
+      setFavorited(false)
+    }
   }
 
   const onBlogLoaded = (blog) => {
     dispatch(addBlogSuccsess(blog))
   }
-  console.log(blog)
+
   const errorMessage = error ? <ErrorIndicator message={error} /> : null
   const spinner = loading ? <Spinner /> : null
   const content =
     spinner ||
     errorMessage ||
-    (blog.slug ? <BlogItem data={blog} userName={userName} handleDeleteTag={confirmDeleteTag} /> : null)
+    (blog.slug ? (
+      <BlogItem
+        data={blog}
+        userName={userName}
+        favorited={favorited}
+        handleDeleteTag={confirmDeleteTag}
+        handleToggleFavorite={handleToggleFavorite}
+      />
+    ) : null)
 
   return (
     <>

@@ -4,13 +4,13 @@ import { Redirect } from 'react-router-dom'
 
 import './article.scss'
 
-const Article = ({ title, isLoggedIn, onSubmit, tags, handleAddTag, handleDeleteTag, handleTagChange, id }) => {
+const Article = ({ title, isLoggedIn, onSubmit, tags, handleAddTag, handleDeleteTag, handleTagChange }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
-  console.log(id)
+
   return (
     <div className="article">
       {!isLoggedIn && <Redirect to="/sign-in" />}
