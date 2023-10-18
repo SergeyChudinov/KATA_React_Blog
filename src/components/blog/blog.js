@@ -38,13 +38,14 @@ function Blog() {
     setFavorited(blog.favorited)
   }, [blog])
 
-  const getBlog = () => {
+  const getBlog = async () => {
     dispatch(addBlogStarted())
-    getArticle(id, token)
-      .then((res) => {
-        onBlogLoaded(res)
-      })
-      .catch((e) => dispatch(addBlogFailure(e)))
+    try {
+      const res = await getArticle(id, token)
+      onBlogLoaded(res)
+    } catch (e) {
+      dispatch(addBlogFailure(e))
+    }
   }
 
   const confirmDeleteTag = () => {
@@ -56,27 +57,32 @@ function Blog() {
     }
   }
 
-  const handleDeleteTag = () => {
+  const handleDeleteTag = async () => {
     dispatch(deleteBlogStarted())
-
-    deleteArticle(token, blog.slug)
-      .then(() => {
-        setBlogIsDelete(true)
-        dispatch(deleteBlogSuccsess())
-      })
-      .catch((e) => {
-        dispatch(deleteBlogFailure(e.message))
-      })
+    try {
+      await deleteArticle(token, blog.slug)
+      setBlogIsDelete(true)
+      dispatch(deleteBlogSuccsess())
+    } catch (e) {
+      dispatch(deleteBlogFailure(e.message))
+    }
   }
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = async () => {
     if (!favorited) {
-      favoriteAnArticle(token, blog.slug).then(() => {
+      try {
+        await favoriteAnArticle(token, blog.slug)
         setFavorited(true)
-      })
+      } catch (e) {
+        console.log(e)
+      }
     } else {
-      unfavoriteAnArticle(token, blog.slug)
-      setFavorited(false)
+      try {
+        await unfavoriteAnArticle(token, blog.slug)
+        setFavorited(false)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 

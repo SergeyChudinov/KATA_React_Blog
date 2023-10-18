@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { Redirect, useParams } from 'react-router-dom'
 
 import BlogService from '../../services/blog-services'
@@ -14,25 +13,7 @@ const CreateArticle = ({ dataType }) => {
 
   const { createArticle, updateArticle } = BlogService()
 
-  const onSubmitCreate = (data) => {
-    const article = {
-      article: {
-        body: data.body,
-        description: data.description,
-        tagList: tags.filter((tag) => tag.replace(/\s/g, '') !== ''),
-        title: data.title,
-      },
-    }
-
-    const json = JSON.stringify(article)
-    createArticle(json, token)
-      .then(() => {
-        setCreateedArticle(true)
-      })
-      .catch((err) => console.log(err))
-  }
-
-  const onSubmitEdit = (data) => {
+  const onSubmit = async (data) => {
     const article = {
       article: {
         body: data.body,
@@ -44,11 +25,16 @@ const CreateArticle = ({ dataType }) => {
 
     const json = JSON.stringify(article)
 
-    updateArticle(json, token, id)
-      .then(() => {
-        setCreateedArticle(true)
-      })
-      .catch((err) => console.log(err))
+    try {
+      if (dataType === 'new-article') {
+        await createArticle(json, token)
+      } else {
+        await updateArticle(json, token, id)
+      }
+      setCreateedArticle(true)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleAddTag = (e) => {
@@ -69,40 +55,21 @@ const CreateArticle = ({ dataType }) => {
     setTags(newTags)
   }
 
-  if (dataType === 'new-article') {
-    return (
-      <>
-        {createedArticle && <Redirect to="/" />}
-        {!isLoggedIn && <Redirect to="/sign-in" />}
-        <Article
-          title="Create new article"
-          isLoggedIn={isLoggedIn}
-          onSubmit={onSubmitCreate}
-          tags={tags}
-          handleAddTag={handleAddTag}
-          handleDeleteTag={handleDeleteTag}
-          handleTagChange={handleTagChange}
-        />
-      </>
-    )
-  } else {
-    return (
-      <>
-        {createedArticle && <Redirect to="/" />}
-        {!isLoggedIn && <Redirect to="/sign-in" />}
-        <Article
-          title="Edit article"
-          isLoggedIn={isLoggedIn}
-          onSubmit={onSubmitEdit}
-          tags={tags}
-          handleAddTag={handleAddTag}
-          handleDeleteTag={handleDeleteTag}
-          handleTagChange={handleTagChange}
-          id={id}
-        />
-      </>
-    )
-  }
+  return (
+    <>
+      {createedArticle && <Redirect to="/" />}
+      {!isLoggedIn && <Redirect to="/sign-in" />}
+      <Article
+        isLoggedIn={isLoggedIn}
+        onSubmit={onSubmit}
+        tags={tags}
+        handleAddTag={handleAddTag}
+        handleDeleteTag={handleDeleteTag}
+        handleTagChange={handleTagChange}
+        dataType={dataType}
+      />
+    </>
+  )
 }
 
 export default CreateArticle
