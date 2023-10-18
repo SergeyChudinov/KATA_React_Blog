@@ -69,7 +69,7 @@ const Article = ({ isLoggedIn, onSubmit, tags, handleAddTag, handleDeleteTag, ha
         <div>
           {tags.length > 0 && <label className={classes['article__label']}>Tags</label>}
           {tags.map((tag, i) => (
-            <div key={i} className="article__container">
+            <div key={i} className={classes['article__container']}>
               <input
                 className={classes['article__tag']}
                 type="text"
