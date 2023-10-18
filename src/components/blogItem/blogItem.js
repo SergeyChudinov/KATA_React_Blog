@@ -36,7 +36,7 @@ function BlogItem({
 
   const blogList = tagList.map((tag, i) => {
     return (
-      <li key={i} className={classes['blogItem__tagList_list-item"']}>
+      <li key={i} className={classes['blogItem__tagList_list-item']}>
         {tag}
       </li>
     )
