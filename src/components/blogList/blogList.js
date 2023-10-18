@@ -8,7 +8,8 @@ import BlogListItem from '../blogListItem'
 import ErrorIndicator from '../error-indicator/error-indicator'
 import Spinner from '../spinner/spinner'
 import Pagin from '../pagination/pagination'
-import './blogList.scss'
+
+import classes from './blogList.module.scss'
 
 function BlogList() {
   const [offset, setOffset] = useState(0)
@@ -18,7 +19,7 @@ function BlogList() {
   const dispatch = useDispatch()
 
   const isLoggedIn = token ? true : false
-  const blogsService = new BlogService()
+  const { getArticles } = BlogService()
 
   useEffect(() => {
     updateBlogs()
@@ -26,8 +27,7 @@ function BlogList() {
 
   const updateBlogs = () => {
     dispatch(addBlogsStarted())
-    blogsService
-      .getArticles(offset, token)
+    getArticles(offset, token)
       .then((res) => {
         onBlogsLoaded(res.articles)
         sePages(Math.ceil(res.articlesCount / 10))
@@ -54,9 +54,9 @@ function BlogList() {
   return (
     <>
       {!isLoggedIn && <Redirect to="/sign-in" />}
-      <div className="blogList">
+      <div className={classes.blogList}>
         {content}
-        <div className="pagination">
+        <div className={classes.pagination}>
           <Pagin nextPage={nextPage} pages={pages} />
         </div>
       </div>

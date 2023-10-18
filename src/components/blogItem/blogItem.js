@@ -5,8 +5,7 @@ import { format } from 'date-fns'
 
 import heart from './heart.svg'
 import heartRed from './heart-red.svg'
-
-import './blogItem.scss'
+import classes from './blogItem.module.scss'
 
 function BlogItem({
   data: {
@@ -37,7 +36,7 @@ function BlogItem({
 
   const blogList = tagList.map((tag, i) => {
     return (
-      <li key={i} className="blogItem__tagList_list-item">
+      <li key={i} className={classes['blogItem__tagList_list-item"']}>
         {tag}
       </li>
     )
@@ -46,11 +45,11 @@ function BlogItem({
   const formattedDate = format(new Date(updatedAt), 'MMMM d, yyyy')
 
   const btns = (
-    <div className="blogItem__groupButton">
-      <button className="blogItem__btn blogItem__delete" onClick={handleDeleteTag}>
+    <div className={classes['blogItem__groupButton']}>
+      <button className={`${classes['blogItem__btn']} ${classes['blogItem__delete']}`} onClick={handleDeleteTag}>
         Delete
       </button>
-      <Link className="blogItem__btn blogItem__edit" to={`/edit-article/${slug}`}>
+      <Link className={`${classes['blogItem__btn']} ${classes['blogItem__edit']}`} to={`/edit-article/${slug}`}>
         Edit
       </Link>
     </div>
@@ -59,27 +58,27 @@ function BlogItem({
   const img = favorited ? heartRed : heart
 
   const section = (
-    <section className="blogItem">
-      <div className="blogItem__container">
-        <div className="blogItem__block">
-          <h2 className="blogItem__title">{title}</h2>
-          <img className="blogItem__heart" src={img} alt="heart" onClick={handleToggle} />
-          <span className="blogItem__favorited">{heartsCount}</span>
+    <section className={classes.blogItem}>
+      <div className={classes['blogItem__container']}>
+        <div className={classes['blogItem__block']}>
+          <h2 className={classes['blogItem__title']}>{title}</h2>
+          <img className={classes['blogItem__heart']} src={img} alt="heart" onClick={handleToggle} />
+          <span className={classes['blogItem__favorited']}>{heartsCount}</span>
         </div>
-        <div className="blogItem__tagList">
-          <ul className="blogItem__tagList_list">{blogList}</ul>
+        <div className={classes['blogItem__tagList']}>
+          <ul className={classes['blogItem__tagList_list']}>{blogList}</ul>
         </div>
-        <p className="blogItem__description">{description}</p>
-        <div className="blogItem_body">
+        <p className={classes['blogItem__description']}>{description}</p>
+        <div className={classes['blogItem_body']}>
           <ReactMarkdown>{body}</ReactMarkdown>
         </div>
       </div>
-      <div className="blogItem__author">
-        <div className="blogItem__case">
-          <p className="blogItem__name">{username}</p>
-          <p className="blogItem__created">{formattedDate}</p>
+      <div className={classes['blogItem__author']}>
+        <div className={classes['blogItem__case']}>
+          <p className={classes['blogItem__name']}>{username}</p>
+          <p className={classes['blogItem__created']}>{formattedDate}</p>
         </div>
-        <img className="blogItem__avatar" src={image} alt="avatar" />
+        <img className={classes['blogItem__avatar']} src={image} alt="avatar" />
       </div>
       {userName === username ? btns : null}
     </section>

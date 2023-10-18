@@ -1,36 +1,43 @@
-import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
+import { Redirect } from 'react-router-dom'
 
-import BlogService from '../../../services/blog-services'
+import BlogService from '../../services/blog-services'
+import { edit } from '../../redux/actions'
 
-import './signUpPages.scss'
+import classes from './prifilePages.module.scss'
 
-const SignUpPages = () => {
-  const [signUp, setSignUp] = useState(false)
+const ProfilePages = () => {
+  const [chengedProfile, setChengedProfile] = useState(false)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
+
+  const dispatch = useDispatch()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm()
 
   const onSubmit = (data) => {
-    const blogService = new BlogService()
+    const { editUser } = BlogService()
 
     const user = {
       user: {
         username: data.name,
         email: data.email,
         password: data.password,
+        image: data.avatar,
       },
     }
     const json = JSON.stringify(user)
-    blogService.signUp(json).then(() => setSignUp(true))
+    editUser(json, token).then((user) => {
+      dispatch(edit(user))
+      localStorage.setItem('token', user.token)
+      setChengedProfile(true)
+    })
   }
 
   const name = register('name', {
@@ -50,16 +57,18 @@ const SignUpPages = () => {
     maxLength: 40,
   })
 
-  const repeatPassword = register('repeatPassword', {
+  const avatar = register('avatar', {
     required: true,
-    validate: (value) => value === watch('password'),
+    pattern: /^(ftp|http|https):\/\/[^ "]+$/,
   })
 
   return (
     <>
-      {!isLoggedIn && signUp && <Redirect to="/sign-in" />}
-      <form className="signUp" onSubmit={handleSubmit(onSubmit)}>
-        <h1>Create new account</h1>
+      {!isLoggedIn && <Redirect to="/sign-in" />}
+      {chengedProfile && <Redirect to="/" />}
+
+      <form className={classes.profile} onSubmit={handleSubmit(onSubmit)}>
+        <h1>Edit Profile</h1>
 
         <label htmlFor="name">Username</label>
         <input
@@ -80,9 +89,7 @@ const SignUpPages = () => {
           </div>
         )}
 
-        <label className="signUp__email" htmlFor="email">
-          Email address
-        </label>
+        <label htmlFor="email">Email address</label>
         <input
           type="email"
           id="email"
@@ -97,9 +104,7 @@ const SignUpPages = () => {
           </div>
         )}
 
-        <label className="signUp__password" htmlFor="password">
-          Password
-        </label>
+        <label htmlFor="password">New Password</label>
         <input
           type="password"
           id="password"
@@ -114,44 +119,25 @@ const SignUpPages = () => {
           </div>
         )}
 
-        <label className="signUp__repeatPassword" htmlFor="repeatPassword">
-          Repeat Password
-        </label>
+        <label htmlFor="avatar">Avatar image (url)</label>
         <input
-          type="password"
-          id="repeatPassword"
-          name="repeatPassword"
-          placeholder="Password"
-          {...repeatPassword}
-          style={{ borderColor: errors.repeatPassword ? 'red' : '#D9D9D9' }}
+          type="text"
+          id="avatar"
+          name="avatar"
+          placeholder="Avatar image"
+          {...avatar}
+          style={{ borderColor: errors.avatar ? 'red' : '#D9D9D9' }}
         />
-        {errors.repeatPassword && (
+        {errors.avatar && (
           <div>
-            <span>Пароли должны совпадать</span>
+            <span style={{ color: '#F5222D' }}>Пожалуйста, введите корректный URL</span>
           </div>
         )}
 
-        <div className="hr" />
-
-        <label className="label" htmlFor="agree">
-          <input className="input" type="checkbox" id="agree" name="agree" {...register('agree', { required: true })} />
-          <span className="check__box"></span>I agree to the processing of my personal information
-        </label>
-        {errors.agree && (
-          <div>
-            <span>You must agree to the processing of your personal information</span>
-          </div>
-        )}
-
-        <button type="submit">Create</button>
-
-        <p>
-          Already have an account?
-          <Link to="/sign-in"> Sign In</Link>
-        </p>
+        <button type="submit">Save</button>
       </form>
     </>
   )
 }
 
-export default SignUpPages
+export default ProfilePages

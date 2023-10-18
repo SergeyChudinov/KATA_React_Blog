@@ -1,17 +1,17 @@
-export default class BlogService {
-  options = {
+function BlogService() {
+  const options = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   }
 
-  url = 'https://blog.kata.academy/api'
-  limit = 10
+  const url = 'https://blog.kata.academy/api'
+  const limit = 10
 
-  async getResource(url) {
+  async function getResource(url) {
     try {
-      const res = await fetch(url, this.options)
+      const res = await fetch(url, options)
       if (res.status === 422) {
         throw new Error('Неправильный пароль')
       } else if (!res.ok) {
@@ -31,71 +31,96 @@ export default class BlogService {
     }
   }
 
-  async getArticles(offset, token) {
-    this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/?limit=${this.limit}&offset=${offset}`)
+  async function getArticles(offset, token) {
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/articles/?limit=${limit}&offset=${offset}`)
     return res
   }
 
-  async getArticle(id, token) {
-    this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/${id}`)
+  async function getArticle(id, token) {
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/articles/${id}`)
     return res.article
   }
 
-  async signUp(data) {
-    this.options.body = data
-    this.options.method = 'POST'
-    const res = await this.getResource(`${this.url}/users`)
+  async function signUp(data) {
+    options.body = data
+    options.method = 'POST'
+    const res = await getResource(`${url}/users`)
+    // console.log(res)
     return res
   }
 
-  async signIn(data) {
-    this.options.body = data
-    this.options.method = 'POST'
-    const res = await this.getResource(`${this.url}/users/login`)
+  async function signIn(data) {
+    options.body = data
+    options.method = 'POST'
+    const res = await getResource(`${url}/users/login`)
     return res.user
   }
 
-  async edit(data, token) {
-    this.options.body = data
-    this.options.method = 'PUT'
-    this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/user`)
+  async function getUser(token) {
+    options.method = 'GET'
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/user`)
+    // console.log(res)
     return res.user
   }
 
-  async createArticle(data, token) {
-    this.options.body = data
-    this.options.method = 'POST'
-    this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles`)
+  async function editUser(data, token) {
+    options.body = data
+    options.method = 'PUT'
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/user`)
+    return res.user
+  }
+
+  async function createArticle(data, token) {
+    options.body = data
+    options.method = 'POST'
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/articles`)
     return res
   }
 
-  async updateArticle(data, token, slug) {
-    this.options.body = data
-    this.options.method = 'PUT'
-    this.options.headers.Authorization = `Bearer ${token}`
-    const res = await this.getResource(`${this.url}/articles/${slug}`)
+  async function updateArticle(data, token, slug) {
+    options.body = data
+    options.method = 'PUT'
+    options.headers.Authorization = `Bearer ${token}`
+    const res = await getResource(`${url}/articles/${slug}`)
     return res
   }
 
-  async deleteArticle(token, slug) {
-    this.options.method = 'DELETE'
-    this.options.headers.Authorization = `Bearer ${token}`
-    return this.getResource(`${this.url}/articles/${slug}`)
+  async function deleteArticle(token, slug) {
+    options.method = 'DELETE'
+    options.headers.Authorization = `Bearer ${token}`
+    return getResource(`${url}/articles/${slug}`)
   }
 
-  async favoriteAnArticle(token, slug) {
-    this.options.method = 'POST'
-    this.options.headers.Authorization = `Bearer ${token}`
-    return this.getResource(`${this.url}/articles/${slug}/favorite`)
+  async function favoriteAnArticle(token, slug) {
+    options.method = 'POST'
+    options.headers.Authorization = `Bearer ${token}`
+    return getResource(`${url}/articles/${slug}/favorite`)
   }
 
-  async unfavoriteAnArticle(token, slug) {
-    this.options.method = 'DELETE'
-    this.options.headers.Authorization = `Bearer ${token}`
-    return this.getResource(`${this.url}/articles/${slug}/favorite`)
+  async function unfavoriteAnArticle(token, slug) {
+    options.method = 'DELETE'
+    options.headers.Authorization = `Bearer ${token}`
+    return getResource(`${url}/articles/${slug}/favorite`)
+  }
+
+  return {
+    getArticles,
+    getArticle,
+    signUp,
+    signIn,
+    getUser,
+    editUser,
+    createArticle,
+    updateArticle,
+    deleteArticle,
+    favoriteAnArticle,
+    unfavoriteAnArticle,
   }
 }
+
+export default BlogService

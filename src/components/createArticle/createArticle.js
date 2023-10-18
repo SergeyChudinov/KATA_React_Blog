@@ -2,19 +2,17 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Redirect, useParams } from 'react-router-dom'
 
-import BlogService from '../../../services/blog-services'
+import BlogService from '../../services/blog-services'
 import Article from '../article/article'
-
-import './createArticle.scss'
 
 const CreateArticle = ({ dataType }) => {
   const [tags, setTags] = useState([])
-  const [createArticle, setCreateArticle] = useState(false)
+  const [createedArticle, setCreateedArticle] = useState(false)
   const { id } = useParams()
   const token = localStorage.getItem('token')
   const isLoggedIn = token ? true : false
 
-  const blogService = new BlogService()
+  const { createArticle, updateArticle } = BlogService()
 
   const onSubmitCreate = (data) => {
     const article = {
@@ -27,10 +25,9 @@ const CreateArticle = ({ dataType }) => {
     }
 
     const json = JSON.stringify(article)
-    blogService
-      .createArticle(json, token)
+    createArticle(json, token)
       .then(() => {
-        setCreateArticle(true)
+        setCreateedArticle(true)
       })
       .catch((err) => console.log(err))
   }
@@ -47,10 +44,9 @@ const CreateArticle = ({ dataType }) => {
 
     const json = JSON.stringify(article)
 
-    blogService
-      .updateArticle(json, token, id)
+    updateArticle(json, token, id)
       .then(() => {
-        setCreateArticle(true)
+        setCreateedArticle(true)
       })
       .catch((err) => console.log(err))
   }
@@ -76,7 +72,7 @@ const CreateArticle = ({ dataType }) => {
   if (dataType === 'new-article') {
     return (
       <>
-        {createArticle && <Redirect to="/" />}
+        {createedArticle && <Redirect to="/" />}
         {!isLoggedIn && <Redirect to="/sign-in" />}
         <Article
           title="Create new article"
@@ -92,7 +88,7 @@ const CreateArticle = ({ dataType }) => {
   } else {
     return (
       <>
-        {createArticle && <Redirect to="/" />}
+        {createedArticle && <Redirect to="/" />}
         {!isLoggedIn && <Redirect to="/sign-in" />}
         <Article
           title="Edit article"

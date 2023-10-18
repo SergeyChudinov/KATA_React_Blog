@@ -15,7 +15,7 @@ import BlogItem from '../blogItem'
 import ErrorIndicator from '../error-indicator/error-indicator'
 import Spinner from '../spinner/spinner'
 
-import './blog.scss'
+import classes from './blog.module.scss'
 
 function Blog() {
   const [blogIsDelete, setBlogIsDelete] = useState(false)
@@ -27,7 +27,7 @@ function Blog() {
 
   const token = localStorage.getItem('token')
   const isLoggedIn = token ? true : false
-  const blogsService = new BlogService()
+  const { getArticle, deleteArticle, favoriteAnArticle, unfavoriteAnArticle } = BlogService()
 
   useEffect(() => {
     if (id) getBlog()
@@ -40,8 +40,7 @@ function Blog() {
 
   const getBlog = () => {
     dispatch(addBlogStarted())
-    blogsService
-      .getArticle(id, token)
+    getArticle(id, token)
       .then((res) => {
         onBlogLoaded(res)
       })
@@ -58,11 +57,9 @@ function Blog() {
   }
 
   const handleDeleteTag = () => {
-    const blogService = new BlogService()
     dispatch(deleteBlogStarted())
 
-    blogService
-      .deleteArticle(token, blog.slug)
+    deleteArticle(token, blog.slug)
       .then(() => {
         setBlogIsDelete(true)
         dispatch(deleteBlogSuccsess())
@@ -74,11 +71,11 @@ function Blog() {
 
   const handleToggleFavorite = () => {
     if (!favorited) {
-      blogsService.favoriteAnArticle(token, blog.slug).then(() => {
+      favoriteAnArticle(token, blog.slug).then(() => {
         setFavorited(true)
       })
     } else {
-      blogsService.unfavoriteAnArticle(token, blog.slug)
+      unfavoriteAnArticle(token, blog.slug)
       setFavorited(false)
     }
   }
@@ -106,7 +103,7 @@ function Blog() {
     <>
       {!isLoggedIn && <Redirect to="/sign-in" />}
       {blogIsDelete && <Redirect to="/" />}
-      <div className="blog">{content}</div>
+      <div className={classes.blog}>{content}</div>
     </>
   )
 }
