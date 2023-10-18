@@ -6,34 +6,32 @@ import ErrorBoundary from '../error-boundry'
 import Header from '../header'
 import BlogList from '../blogList'
 import Blog from '../blog'
-import SignUpPages from '../pages/signUpPages'
-import SignInPages from '../pages/signInPages'
-import ProfilePages from '../pages/prifilePages'
-import CreateArticle from '../pages/createArticle'
+import SignUpPages from '../signUpPages'
+import SignInPages from '../signInPages'
+import ProfilePages from '../prifilePages'
+import CreateArticle from '../createArticle'
 import { logInSuccsess } from '../../redux/actions'
+import BlogService from '../../services/blog-services'
 
-import './app.scss'
+import classes from './app.module.scss'
 
 function App() {
   const dispatch = useDispatch()
+
+  const { getUser } = BlogService()
 
   useEffect(() => {
     const token = localStorage.getItem('token')
 
     if (token) {
-      const user = {
-        username: localStorage.getItem('username'),
-        token: localStorage.getItem('token'),
-        image: localStorage.getItem('image'),
-      }
-      dispatch(logInSuccsess(user))
+      getUser(token).then((user) => dispatch(logInSuccsess(user)))
     }
   })
 
   return (
     <Router>
       <ErrorBoundary>
-        <div className="app">
+        <div className={classes.app}>
           <Header />
           <Switch>
             <Route exact path="/">

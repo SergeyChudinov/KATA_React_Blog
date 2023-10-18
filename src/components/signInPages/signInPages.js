@@ -3,19 +3,20 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Redirect, Link } from 'react-router-dom'
 
-import { logInStrarted, logInSuccsess, logInFailure, dataIsNotCrrect } from '../../../redux/actions'
-import BlogService from '../../../services/blog-services'
-import ErrorIndicator from '../../error-indicator/error-indicator'
-import Spinner from '../../spinner/spinner'
+import { logInStrarted, logInSuccsess, logInFailure, dataIsNotCrrect } from '../../redux/actions'
+import BlogService from '../../services/blog-services'
+import ErrorIndicator from '../error-indicator/error-indicator'
+import Spinner from '../spinner/spinner'
 
-import './signInPages.scss'
+import classes from './signInPages.module.scss'
 
 const SignInPages = () => {
   const [incorrectLogin, setIncorrectLogin] = useState(false)
   const { token, error, loading } = useSelector((state) => state.user)
-  const isLoggedIn = token ? true : false
-
   const dispatch = useDispatch()
+
+  const { signIn } = BlogService()
+  const isLoggedIn = token ? true : false
 
   const {
     register,
@@ -24,8 +25,6 @@ const SignInPages = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    const blogService = new BlogService()
-
     const user = {
       user: {
         email: data.email,
@@ -35,13 +34,10 @@ const SignInPages = () => {
     const json = JSON.stringify(user)
     dispatch(logInStrarted())
 
-    blogService
-      .signIn(json)
+    signIn(json)
       .then((user) => {
         dispatch(logInSuccsess(user))
-        localStorage.setItem('username', user.username)
         localStorage.setItem('token', user.token)
-        localStorage.setItem('image', user.image)
       })
       .catch((e) => {
         if (e.message.includes('Неправильный пароль')) {
@@ -71,12 +67,10 @@ const SignInPages = () => {
   })
 
   const elements = (
-    <form className="signIn" onSubmit={handleSubmit(onSubmit)}>
+    <form className={classes.signIn} onSubmit={handleSubmit(onSubmit)}>
       <h1>Sign In</h1>
 
-      <label className="signIn__email" htmlFor="email">
-        Email address
-      </label>
+      <label htmlFor="email">Email address</label>
       <input
         type="email"
         id="email"
@@ -91,9 +85,7 @@ const SignInPages = () => {
         </div>
       )}
 
-      <label className="signIn__password" htmlFor="password">
-        Password
-      </label>
+      <label htmlFor="password">Password</label>
       <input
         type="password"
         id="password"

@@ -1,45 +1,37 @@
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { Redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Redirect, Link } from 'react-router-dom'
+import { useState } from 'react'
 
-import BlogService from '../../../services/blog-services'
-import { edit } from '../../../redux/actions'
+import BlogService from '../../services/blog-services'
 
-import './prifilePages.scss'
+import classes from './signUpPages.module.scss'
 
-const ProfilePages = () => {
-  const [chengedProfile, setChengedProfile] = useState(false)
+const SignUpPages = () => {
+  const [signedUp, setSignedUp] = useState(false)
   const token = useSelector((state) => state.user.token)
   const isLoggedIn = token ? true : false
 
-  const dispatch = useDispatch()
+  const { signUp } = BlogService()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm()
 
   const onSubmit = (data) => {
-    const blogService = new BlogService()
-
     const user = {
       user: {
         username: data.name,
         email: data.email,
         password: data.password,
-        image: data.avatar,
       },
     }
+    console.log(user)
     const json = JSON.stringify(user)
-    blogService.edit(json, token).then((user) => {
-      dispatch(edit(user))
-      localStorage.setItem('username', user.username)
-      localStorage.setItem('token', user.token)
-      localStorage.setItem('image', user.image)
-      setChengedProfile(true)
-    })
+    signUp(json).then(() => setSignedUp(true))
   }
 
   const name = register('name', {
@@ -59,17 +51,16 @@ const ProfilePages = () => {
     maxLength: 40,
   })
 
-  const avatar = register('avatar', {
+  const repeatPassword = register('repeatPassword', {
     required: true,
-    pattern: /^(ftp|http|https):\/\/[^ "]+$/,
+    validate: (value) => value === watch('password'),
   })
 
   return (
     <>
-      {!isLoggedIn && <Redirect to="/sign-in" />}
-      {chengedProfile && <Redirect to="/" />}
-      <form className="profile" onSubmit={handleSubmit(onSubmit)}>
-        <h1>Edit Profile</h1>
+      {!isLoggedIn && signedUp && <Redirect to="/sign-in" />}
+      <form className={classes.signUp} onSubmit={handleSubmit(onSubmit)}>
+        <h1>Create new account</h1>
 
         <label htmlFor="name">Username</label>
         <input
@@ -90,9 +81,7 @@ const ProfilePages = () => {
           </div>
         )}
 
-        <label className="profile__email" htmlFor="email">
-          Email address
-        </label>
+        <label htmlFor="email">Email address</label>
         <input
           type="email"
           id="email"
@@ -107,9 +96,7 @@ const ProfilePages = () => {
           </div>
         )}
 
-        <label className="profile__password" htmlFor="password">
-          New Password
-        </label>
+        <label htmlFor="password">Password</label>
         <input
           type="password"
           id="password"
@@ -124,25 +111,48 @@ const ProfilePages = () => {
           </div>
         )}
 
-        <label htmlFor="avatar">Avatar image (url)</label>
+        <label htmlFor="repeatPassword">Repeat Password</label>
         <input
-          type="text"
-          id="avatar"
-          name="avatar"
-          placeholder="Avatar image"
-          {...avatar}
-          style={{ borderColor: errors.avatar ? 'red' : '#D9D9D9' }}
+          type="password"
+          id="repeatPassword"
+          name="repeatPassword"
+          placeholder="Password"
+          {...repeatPassword}
+          style={{ borderColor: errors.repeatPassword ? 'red' : '#D9D9D9' }}
         />
-        {errors.avatar && (
+        {errors.repeatPassword && (
           <div>
-            <span style={{ color: '#F5222D' }}>Пожалуйста, введите корректный URL</span>
+            <span>Пароли должны совпадать</span>
           </div>
         )}
 
-        <button type="submit">Save</button>
+        <div className={classes.hr} />
+
+        <label className={classes.label} htmlFor="agree">
+          <input
+            className={classes.input}
+            type="checkbox"
+            id="agree"
+            name="agree"
+            {...register('agree', { required: true })}
+          />
+          <span className={classes['check__box']}></span>I agree to the processing of my personal information
+        </label>
+        {errors.agree && (
+          <div>
+            <span>You must agree to the processing of your personal information</span>
+          </div>
+        )}
+
+        <button type="submit">Create</button>
+
+        <p>
+          Already have an account?
+          <Link to="/sign-in"> Sign In</Link>
+        </p>
       </form>
     </>
   )
 }
 
-export default ProfilePages
+export default SignUpPages
