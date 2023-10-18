@@ -25,14 +25,15 @@ function BlogList() {
     updateBlogs()
   }, [offset])
 
-  const updateBlogs = () => {
+  const updateBlogs = async () => {
     dispatch(addBlogsStarted())
-    getArticles(offset, token)
-      .then((res) => {
-        onBlogsLoaded(res.articles)
-        sePages(Math.ceil(res.articlesCount / 10))
-      })
-      .catch((e) => dispatch(addBlogsFailure(e)))
+    try {
+      const res = await getArticles(offset, token)
+      onBlogsLoaded(res.articles)
+      sePages(Math.ceil(res.articlesCount / 10))
+    } catch (e) {
+      dispatch(addBlogsFailure(e))
+    }
   }
 
   const onBlogsLoaded = (blogs) => {

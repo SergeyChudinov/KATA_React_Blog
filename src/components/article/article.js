@@ -3,12 +3,14 @@ import { Redirect } from 'react-router-dom'
 
 import classes from './article.module.scss'
 
-const Article = ({ title, isLoggedIn, onSubmit, tags, handleAddTag, handleDeleteTag, handleTagChange }) => {
+const Article = ({ isLoggedIn, onSubmit, tags, handleAddTag, handleDeleteTag, handleTagChange, dataType }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
+
+  const title = dataType === 'new-article' ? 'Create new article' : 'Edit article'
 
   return (
     <div className={classes.article}>

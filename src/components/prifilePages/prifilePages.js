@@ -11,9 +11,10 @@ import classes from './prifilePages.module.scss'
 const ProfilePages = () => {
   const [chengedProfile, setChengedProfile] = useState(false)
   const token = useSelector((state) => state.user.token)
-  const isLoggedIn = token ? true : false
-
   const dispatch = useDispatch()
+
+  const { editUser } = BlogService()
+  const isLoggedIn = token ? true : false
 
   const {
     register,
@@ -21,9 +22,7 @@ const ProfilePages = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
-    const { editUser } = BlogService()
-
+  const onSubmit = async (data) => {
     const user = {
       user: {
         username: data.name,
@@ -33,11 +32,15 @@ const ProfilePages = () => {
       },
     }
     const json = JSON.stringify(user)
-    editUser(json, token).then((user) => {
+
+    try {
+      await editUser(json, token)
       dispatch(edit(user))
       localStorage.setItem('token', user.token)
       setChengedProfile(true)
-    })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const name = register('name', {

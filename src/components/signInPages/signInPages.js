@@ -24,7 +24,7 @@ const SignInPages = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const user = {
       user: {
         email: data.email,
@@ -34,19 +34,18 @@ const SignInPages = () => {
     const json = JSON.stringify(user)
     dispatch(logInStrarted())
 
-    signIn(json)
-      .then((user) => {
-        dispatch(logInSuccsess(user))
-        localStorage.setItem('token', user.token)
-      })
-      .catch((e) => {
-        if (e.message.includes('Неправильный пароль')) {
-          setIncorrectLogin(true)
-          dispatch(dataIsNotCrrect())
-        } else {
-          dispatch(logInFailure(e))
-        }
-      })
+    try {
+      const user = await signIn(json)
+      dispatch(logInSuccsess(user))
+      localStorage.setItem('token', user.token)
+    } catch (e) {
+      if (e.message.includes('Неправильный пароль')) {
+        setIncorrectLogin(true)
+        dispatch(dataIsNotCrrect())
+      } else {
+        dispatch(logInFailure(e))
+      }
+    }
   }
 
   const incorrectLoginMessage = incorrectLogin ? (

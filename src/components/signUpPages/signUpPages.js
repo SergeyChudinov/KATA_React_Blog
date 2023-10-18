@@ -21,7 +21,7 @@ const SignUpPages = () => {
     watch,
   } = useForm()
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const user = {
       user: {
         username: data.name,
@@ -29,9 +29,10 @@ const SignUpPages = () => {
         password: data.password,
       },
     }
-    console.log(user)
+
     const json = JSON.stringify(user)
-    signUp(json).then(() => setSignedUp(true))
+    await signUp(json)
+    setSignedUp(true)
   }
 
   const name = register('name', {
